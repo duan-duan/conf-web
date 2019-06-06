@@ -1,5 +1,5 @@
-Django==1.11.8
-django-pure-pagination
-MySQL-python
-requests
+Django==2.1.7
+django-pure-pagination==0.3.0
+PyMySQL==0.9.3
+requests==2.21.0
 python-etcd==0.4.5
