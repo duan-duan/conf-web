@@ -5,13 +5,13 @@ from django.shortcuts import render
 from django.contrib.auth.mixins import LoginRequiredMixin
 from pure_pagination.mixins import PaginationMixin
 from django.views.generic import View, TemplateView, ListView, DetailView
-from confd.models import project_Confd,vhosts_Confd
-from forms import ProjectForm, VhostForm
+from confd.models import ProjectConfd, VhostsConfd
+from confd.forms import ProjectForm, VhostForm
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 from utils.etcd_api import create_dir,delete_dir, create_vhost, delete_vhost
 from django.db.models import Q
-from  django.http import  HttpResponse, JsonResponse, QueryDict,Http404
+from django.http import HttpResponse, JsonResponse, QueryDict, Http404
 
 # Create your views here.
 
@@ -23,7 +23,7 @@ class  CreateProjectView(LoginRequiredMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(CreateProjectView, self).get_context_data(**kwargs)
-        context['projects'] = project_Confd.objects.values('id','project_name')
+        context['projects'] = ProjectConfd.objects.values('id','project_name')
         return context
 
 
@@ -40,7 +40,7 @@ class  CreateProjectView(LoginRequiredMixin, TemplateView):
         #如果有选择上级项目,进行项目目录拼接创建项目
         else:
             pk = webdata.get('superior_project_name')
-            project_url =  project_Confd.objects.filter(pk=pk).values('project_url')[0]
+            project_url =  ProjectConfd.objects.filter(pk=pk).values('project_url')[0]
             webdata['project_url']  =   project_url['project_url'] + '/' +  webdata['project_url']
             if  Projects_form(webdata, request):
                 return HttpResponseRedirect(reverse('confd:project_list'))
@@ -66,7 +66,7 @@ class  ProjectListView(LoginRequiredMixin, PaginationMixin, ListView):
     '''
       项目列表，删除项目
     '''
-    model = project_Confd
+    model = ProjectConfd
     template_name = 'confd/project_list.html'
     context_object_name = "project_list"
     paginate_by = 10
@@ -90,9 +90,9 @@ class  ProjectListView(LoginRequiredMixin, PaginationMixin, ListView):
         try:
             data = QueryDict(request.body)
             pk = data.get('id')
-            project_url =  project_Confd.objects.filter(pk=pk).values('project_url')[0]
+            project_url =  ProjectConfd.objects.filter(pk=pk).values('project_url')[0]
             if  delete_dir(project_url['project_url']):
-                project = project_Confd.objects.filter(pk=pk).delete()
+                project = ProjectConfd.objects.filter(pk=pk).delete()
                 ret = {'code': 0, 'result': '删除成功！'}
             else:
                 ret = {'code': 1, 'result': '该项目里面有子项目！'}
@@ -111,13 +111,13 @@ class  CreateVhostView(LoginRequiredMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(CreateVhostView, self).get_context_data(**kwargs)
-        context['projects'] = project_Confd.objects.values('id','project_name')
+        context['projects'] = ProjectConfd.objects.values('id','project_name')
         return context
 
     def post(self, request):
         webdata = request.POST.dict()
         project_name =  webdata.get('project_name')
-        project = project_Confd.objects.filter(pk=project_name).values('project_url')[0]
+        project = ProjectConfd.objects.filter(pk=project_name).values('project_url')[0]
         webdata['vhosts_key'] =  project['project_url'] + '/' +  webdata['vhosts_key']
         forms = VhostForm(webdata)
         if forms.is_valid():
@@ -140,7 +140,7 @@ class  VhostListView(LoginRequiredMixin, PaginationMixin, ListView):
     '''
       虚拟主机列表,信息修改
     '''
-    model = vhosts_Confd
+    model = VhostsConfd
     template_name = 'confd/vhost_list.html'
     context_object_name = "vhosts_list"
     paginate_by = 10
@@ -157,12 +157,12 @@ class  VhostListView(LoginRequiredMixin, PaginationMixin, ListView):
     def get_context_data(self, **kwargs):
         context = super(VhostListView, self).get_context_data(**kwargs)
         context['keyword'] = self.keyword
-        context['projects'] = project_Confd.objects.all()
+        context['projects'] = ProjectConfd.objects.all()
         return context
 
     def post(self, request):
         webdata = request.POST.dict()
-        vhosts_object = vhosts_Confd.objects.get(pk=webdata['id'])
+        vhosts_object = VhostsConfd.objects.get(pk=webdata['id'])
         try:
             if create_vhost(webdata['vhosts_key'],webdata['vhosts_value']):
                 vhosts_object.vhosts_value = webdata['vhosts_value']
@@ -178,8 +178,8 @@ class  VhostListView(LoginRequiredMixin, PaginationMixin, ListView):
         data = QueryDict(request.body)
         pk = data.get('id')
         status = data.get('status')
-        vhosts_object = vhosts_Confd.objects.get(pk=pk)
-        if  vhosts_Confd.objects.filter(pk=pk, vhosts_key__icontains = 'upstream'):
+        vhosts_object = VhostsConfd.objects.get(pk=pk)
+        if  VhostsConfd.objects.filter(pk=pk, vhosts_key__icontains = 'upstream'):
             if status == '0':
                 vhosts_object.vhosts_value =  vhosts_object.vhosts_value + ' down'
                 vhosts_object.vhosts_status  = 1
@@ -205,10 +205,10 @@ class  VhostListView(LoginRequiredMixin, PaginationMixin, ListView):
     def delete(self, request, *args, **kwargs):
         data = QueryDict(request.body)
         pk = data.get('id')
-        vhosts_key = vhosts_Confd.objects.filter(pk=pk).values('vhosts_key')[0]
+        vhosts_key = VhostsConfd.objects.filter(pk=pk).values('vhosts_key')[0]
         try:
             if delete_vhost(vhosts_key['vhosts_key']):
-                vhost = vhosts_Confd.objects.filter(pk=pk).delete()
+                vhost = VhostsConfd.objects.filter(pk=pk).delete()
                 ret = {'code': 0, 'result': '删除成功！'}
             else:
                 ret = {'code': 1, 'result': '该项目里面有子项目！'}
@@ -223,7 +223,7 @@ class VhostDetailView(LoginRequiredMixin, DetailView):
          虚拟主机配置详情
     '''
     template_name = 'confd/vhost_detail.html'
-    model = vhosts_Confd
+    model = VhostsConfd
     context_object_name = 'vhost_detail'
 
 

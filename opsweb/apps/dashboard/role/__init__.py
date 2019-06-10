@@ -2,7 +2,7 @@
 from django.views.generic import ListView, DetailView, CreateView,View
 from django.db.models import Q
 from django.http import JsonResponse, HttpResponseRedirect
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 from django.shortcuts import render
 from pure_pagination.mixins import PaginationMixin
 from django.contrib.auth.mixins import LoginRequiredMixin

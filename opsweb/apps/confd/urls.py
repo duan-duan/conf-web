@@ -2,7 +2,7 @@
 
 from django.conf.urls import url,include
 from .views import *
-
+app_name = 'confd'
 urlpatterns = [
     url(r'^project', include([
         url(r'^list/$', ProjectListView.as_view(), name="project_list"),

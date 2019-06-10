@@ -13,7 +13,7 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.AlterField(
-            model_name='vhosts_confd',
+            model_name='VhostsConfd',
             name='vhosts_key',
             field=models.CharField(max_length=40, unique=True, verbose_name='\u5b50\u9879\u76ee\u8def\u5f84'),
         ),

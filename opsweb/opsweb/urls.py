@@ -13,22 +13,21 @@ Including another URLconf
     1. Import the include() function: from django.conf.urls import url, include
     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
-from django.conf.urls import url, include
 from django.contrib import admin
+from django.urls import path, include, re_path
 
 from dashboard.views import LoginView, LogoutView, IndexView
 from django.views.static import serve
 #from opsweb.settings import STATIC_ROOT
 
 urlpatterns = [
-    url(r'^admin/', admin.site.urls),
+    path(r'admin/', admin.site.urls),
     #url(r'^static/(?P<path>.*)$', serve, {"document_root": STATIC_ROOT}),
-    url('^$', IndexView.as_view(), name='index'),
-    url('^index/', IndexView.as_view(), name='index'),
-    url('^login/', LoginView.as_view(), name='login'),
-    url('^logout/', LogoutView.as_view(), name='logout'),
-
-    url('^dashboard/', include("dashboard.urls", namespace="dashboard")),
-    url('^confd/', include('confd.urls', namespace='confd')),
+    path('', IndexView.as_view(), name='index'),
+    path('index/', IndexView.as_view(), name='index'),
+    path('login/', LoginView.as_view(), name='login'),
+    path('logout/', LogoutView.as_view(), name='logout'),
+    path('dashboard/', include("dashboard.urls")),
+    path('confd/', include('confd.urls')),
 
 ]

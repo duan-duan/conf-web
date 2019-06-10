@@ -13,17 +13,17 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.RenameField(
-            model_name='vhosts_confd',
+            model_name='VhostsConfd',
             old_name='vhosts_url',
             new_name='vhosts_key',
         ),
         migrations.RenameField(
-            model_name='vhosts_confd',
+            model_name='VhostsConfd',
             old_name='server_root',
             new_name='vhosts_value',
         ),
         migrations.RemoveField(
-            model_name='vhosts_confd',
+            model_name='VhostsConfd',
             name='server_name',
         ),
     ]

@@ -1,14 +1,14 @@
 from django import forms
-from confd.models import project_Confd, vhosts_Confd
+from confd.models import ProjectConfd, VhostsConfd
 
 
 class ProjectForm(forms.ModelForm):
     class Meta:
-        model = project_Confd
+        model = ProjectConfd
         fields = "__all__"
 
 
 class VhostForm(forms.ModelForm):
     class Meta:
-        model = vhosts_Confd
+        model = VhostsConfd
         fields = ['project_name','vhosts_key','vhosts_value']

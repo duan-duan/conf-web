@@ -3,7 +3,7 @@ from __future__ import unicode_literals
 
 from django.shortcuts import render
 from django.http import HttpResponseRedirect,JsonResponse
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 from django.views.generic import View, TemplateView
 from django.contrib.auth import authenticate,login,logout
 from django.utils.decorators import method_decorator

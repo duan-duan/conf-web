@@ -13,12 +13,12 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.AlterField(
-            model_name='project_confd',
+            model_name='ProjectConfd',
             name='project_url',
             field=models.URLField(max_length=40, verbose_name='\u9879\u76ee\u76ee\u5f55'),
         ),
         migrations.AlterField(
-            model_name='vhosts_confd',
+            model_name='VhostsConfd',
             name='vhosts_url',
             field=models.URLField(max_length=40, verbose_name='\u5b50\u9879\u76ee\u8def\u5f84'),
         ),

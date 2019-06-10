@@ -1,6 +1,6 @@
 from django.conf.urls import include, url
 from dashboard import users, role, power,views
-
+app_name = 'dashboard'
 urlpatterns = [
     url(r'^userlist/$', users.UserListView.as_view(), name='user_list'),
     url(r'^userdetail/(?P<pk>[0-9]+)?/$', users.UserDetailView.as_view(), name='user_detail'),

@@ -14,7 +14,7 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name='project_Confd',
+            name='ProjectConfd',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('project_name', models.CharField(max_length=40, verbose_name='\u9879\u76ee\u540d\u79f0')),
@@ -22,13 +22,13 @@ class Migration(migrations.Migration):
             ],
         ),
         migrations.CreateModel(
-            name='vhosts_Confd',
+            name='VhostsConfd',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('vhosts_url', models.CharField(max_length=40, verbose_name='\u5b50\u9879\u76ee\u8def\u5f84')),
                 ('server_name', models.CharField(max_length=40, verbose_name='\u57df\u540d')),
                 ('server_root', models.CharField(max_length=40, verbose_name='\u7a0b\u5e8f\u76ee\u5f55')),
-                ('project_name', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='confd.project_Confd', verbose_name='\u9879\u76ee\u540d\u79f0')),
+                ('project_name', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='confd.ProjectConfd', verbose_name='\u9879\u76ee\u540d\u79f0')),
             ],
         ),
         migrations.DeleteModel(

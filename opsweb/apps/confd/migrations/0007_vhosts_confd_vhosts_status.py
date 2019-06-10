@@ -13,7 +13,7 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.AddField(
-            model_name='vhosts_confd',
+            model_name='VhostsConfd',
             name='vhosts_status',
             field=models.IntegerField(choices=[(0, 'UP'), (1, 'Down')], default=0, verbose_name='\u5de5\u5355\u72b6\u6001'),
         ),
