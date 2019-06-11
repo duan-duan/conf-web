@@ -15,7 +15,8 @@ from django.http import HttpResponse, JsonResponse, QueryDict, Http404
 
 # Create your views here.
 
-class  CreateProjectView(LoginRequiredMixin, TemplateView):
+
+class CreateProjectView(LoginRequiredMixin, TemplateView):
     '''
       创建一个空白项目目录
     '''
@@ -23,30 +24,28 @@ class  CreateProjectView(LoginRequiredMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(CreateProjectView, self).get_context_data(**kwargs)
-        context['projects'] = ProjectConfd.objects.values('id','project_name')
+        context['projects'] = ProjectConfd.objects.values('id', 'project_name')
         return context
-
 
     def post(self, request):
         webdata = request.POST.dict()
         webdata['project_url'] = webdata['project_url'].strip()
 
-        #如果没选择上级项目,直接创建空白项目
-        if webdata['superior_project_name']  == '----\u8bf7\u9009\u62e9----':
-            webdata['project_url']  =   '/' +  webdata['project_url']
-            if  Projects_form(webdata, request):
+        # 如果没选择上级项目,直接创建空白项目
+        if webdata['superior_project_name'] == '----\u8bf7\u9009\u62e9----':
+            webdata['project_url'] = '/' + webdata['project_url']
+            if projects_form(webdata, request):
                return HttpResponseRedirect(reverse('confd:project_list'))
-
-        #如果有选择上级项目,进行项目目录拼接创建项目
+        # 如果有选择上级项目,进行项目目录拼接创建项目
         else:
             pk = webdata.get('superior_project_name')
-            project_url =  ProjectConfd.objects.filter(pk=pk).values('project_url')[0]
-            webdata['project_url']  =   project_url['project_url'] + '/' +  webdata['project_url']
-            if  Projects_form(webdata, request):
+            project_url = ProjectConfd.objects.filter(pk=pk).values('project_url')[0]
+            webdata['project_url'] = project_url['project_url'] + '/' + webdata['project_url']
+            if projects_form(webdata, request):
                 return HttpResponseRedirect(reverse('confd:project_list'))
 
 
-def  Projects_form(webdata,request):
+def projects_form(webdata, request):
     forms = ProjectForm(webdata)
     if forms.is_valid():
         try:
@@ -59,10 +58,7 @@ def  Projects_form(webdata,request):
             return render(request, 'confd/apply_project.html', {'forms': forms, 'errmsg': '项目创建失败'})
 
 
-
-
-
-class  ProjectListView(LoginRequiredMixin, PaginationMixin, ListView):
+class ProjectListView(LoginRequiredMixin, PaginationMixin, ListView):
     '''
       项目列表，删除项目
     '''
@@ -71,7 +67,6 @@ class  ProjectListView(LoginRequiredMixin, PaginationMixin, ListView):
     context_object_name = "project_list"
     paginate_by = 10
     keyword = ''
-
 
     def get_queryset(self):
         queryset = super(ProjectListView, self).get_queryset()
@@ -101,9 +96,7 @@ class  ProjectListView(LoginRequiredMixin, PaginationMixin, ListView):
         return JsonResponse(ret, safe=True)
 
 
-
-
-class  CreateVhostView(LoginRequiredMixin, TemplateView):
+class CreateVhostView(LoginRequiredMixin, TemplateView):
     '''
      添加虚拟主机
     '''
@@ -134,8 +127,7 @@ class  CreateVhostView(LoginRequiredMixin, TemplateView):
         return JsonResponse(ret, safe=True)
 
 
-
-class  VhostListView(LoginRequiredMixin, PaginationMixin, ListView):
+class VhostListView(LoginRequiredMixin, PaginationMixin, ListView):
 
     '''
       虚拟主机列表,信息修改
@@ -200,7 +192,6 @@ class  VhostListView(LoginRequiredMixin, PaginationMixin, ListView):
         else:
             ret = {'code': 1, 'result': '该字段没有此功能！'}
         return JsonResponse(ret, safe=True)
-
 
     def delete(self, request, *args, **kwargs):
         data = QueryDict(request.body)
