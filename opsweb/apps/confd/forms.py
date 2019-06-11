@@ -11,4 +11,4 @@ class ProjectForm(forms.ModelForm):
 class VhostForm(forms.ModelForm):
     class Meta:
         model = VhostsConfd
-        fields = ['project_name','vhosts_key','vhosts_value']
+        fields = ['project_name', 'vhosts_key', 'vhosts_value']

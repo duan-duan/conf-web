@@ -109,13 +109,13 @@ class CreateVhostView(LoginRequiredMixin, TemplateView):
 
     def post(self, request):
         webdata = request.POST.dict()
-        project_name =  webdata.get('project_name')
+        project_name = webdata.get('project_name')
         project = ProjectConfd.objects.filter(pk=project_name).values('project_url')[0]
-        webdata['vhosts_key'] =  project['project_url'] + '/' +  webdata['vhosts_key']
+        webdata['vhosts_key'] = project['project_url'] + '/' + webdata['vhosts_key']
         forms = VhostForm(webdata)
         if forms.is_valid():
             try:
-                if create_vhost(webdata['vhosts_key'],webdata['vhosts_value']):
+                if create_vhost(webdata['vhosts_key'], webdata['vhosts_value']):
                     forms.save()
                     return HttpResponseRedirect(reverse('confd:vhost_list'))
                 else:
