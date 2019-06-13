@@ -85,8 +85,8 @@ class ProjectListView(LoginRequiredMixin, PaginationMixin, ListView):
         try:
             data = QueryDict(request.body)
             pk = data.get('id')
-            project_url =  ProjectConfd.objects.filter(pk=pk).values('project_url')[0]
-            if  delete_dir(project_url['project_url']):
+            project_url = ProjectConfd.objects.filter(pk=pk).values('project_url')[0]
+            if delete_dir(project_url['project_url']):
                 project = ProjectConfd.objects.filter(pk=pk).delete()
                 ret = {'code': 0, 'result': '删除成功！'}
             else:
@@ -104,7 +104,7 @@ class CreateVhostView(LoginRequiredMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(CreateVhostView, self).get_context_data(**kwargs)
-        context['projects'] = ProjectConfd.objects.values('id','project_name')
+        context['projects'] = ProjectConfd.objects.values('id', 'project_name')
         return context
 
     def post(self, request):
@@ -181,7 +181,7 @@ class VhostListView(LoginRequiredMixin, PaginationMixin, ListView):
 
             elif status == '1':
                 value = vhosts_object.vhosts_value.split(' ')[0]
-                vhosts_object.vhosts_status  = 0
+                vhosts_object.vhosts_status = 0
                 vhosts_object.vhosts_value = value
                 create_vhost(vhosts_object.vhosts_key, value)
                 vhosts_object.save()
