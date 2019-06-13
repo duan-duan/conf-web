@@ -171,16 +171,16 @@ class VhostListView(LoginRequiredMixin, PaginationMixin, ListView):
         pk = data.get('id')
         status = data.get('status')
         vhosts_object = VhostsConfd.objects.get(pk=pk)
-        if  VhostsConfd.objects.filter(pk=pk, vhosts_key__icontains = 'upstream'):
+        if VhostsConfd.objects.filter(pk=pk, vhosts_key__icontains = 'upstream'):
             if status == '0':
-                vhosts_object.vhosts_value =  vhosts_object.vhosts_value + ' down'
-                vhosts_object.vhosts_status  = 1
+                vhosts_object.vhosts_value = vhosts_object.vhosts_value + ' down'
+                vhosts_object.vhosts_status = 1
                 create_vhost(vhosts_object.vhosts_key, vhosts_object.vhosts_value)
                 vhosts_object.save()
                 ret = {'code': 0, 'result': '修改成功！'}
 
-            elif status  == '1'  :
-                value =  vhosts_object.vhosts_value.split(' ')[0]
+            elif status == '1':
+                value = vhosts_object.vhosts_value.split(' ')[0]
                 vhosts_object.vhosts_status  = 0
                 vhosts_object.vhosts_value = value
                 create_vhost(vhosts_object.vhosts_key, value)
