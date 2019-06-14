@@ -8,7 +8,7 @@
 ## 环境:
 
 	CentOS 6/7 x64
-	Python:  2.7.6
+	Python:  3.7.1
 	Etcd： 3.2.18
 	Confd:  0.16.0
 	Nginx: 1.12.1
